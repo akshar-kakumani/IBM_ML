@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleanAirX - Complete App Prototype</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg-gradient: linear-gradient(135deg, #f6f9fc 0%, #ffffff 100%);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .nav-menu {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background: #f3f4f6;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1rem;
+            border: 1px solid #f3f4f6;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .aqi-indicator {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .aqi-good { background: linear-gradient(135deg, #10B981, #34D399); }
+        .aqi-moderate { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
+        .aqi-unhealthy { background: linear-gradient(135deg, #EF4444, #F87171); }
+
+        .alert-badge {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .forecast-map {
+            background: linear-gradient(45deg, #22c55e 0%, #fbbf24 30%, #f59e0b 60%, #ef4444 100%);
+            border-radius: 16px;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crop-detection {
+            background: linear-gradient(45deg, #84cc16 0%, #22c55e 50%, #eab308 100%);
+            border-radius: 16px;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .livestock-alert {
+            background: linear-gradient(45deg, #ef4444 0%, #f87171 50%, #fb7185 100%);
+            border-radius: 16px;
+            height: 250px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-container {
+            background: linear-gradient(45deg, #22c55e 0%, #fbbf24 30%, #f59e0b 60%, #ef4444 100%);
+            border-radius: 16px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .notification-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .notification-item.urgent {
+            border-left-color: #ef4444;
+        }
+
+        .notification-item.warning {
+            border-left-color: #f59e0b;
+        }
+
+        .notification-item.success {
+            border-left-color: #10b981;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin: 1rem 0;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .status-good { background: #10b981; }
+        .status-moderate { background: #f59e0b; }
+        .status-unhealthy { background: #ef4444; }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .app-container {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+
+        .wind-indicator {
+            position: absolute;
+            color: white;
+            font-size: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .damage-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .emergency-button {
+            background: #dc2626;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            margin: 0.5rem 0;
+            transition: all 0.2s;
+        }
+
+        .emergency-button:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        .resource-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .resource-item:hover {
+            background: #f1f5f9;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Screen 1: Dashboard -->
+        <div id="dashboard" class="screen active">
+            <div class="header">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800">CleanAirX</h1>
+                    <p class="text-sm text-gray-500">Agill Desela++</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <i class="fas fa-bell text-gray-600"></i>
+                    </button>
+                    <button class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <!-- Main AQI Display -->
+                <div class="feature-card text-center mb-6">
+                    <div class="aqi-indicator aqi-unhealthy mb-4">
+                        <span>182</span>
+                    </div>
+                    <div class="alert-badge mb-4">Unhealthy</div>
+                    <p class="text-gray-600 mb-4">Air is harmful</p>
+                    <div class="grid-2 text-left">
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">PM2.5</p>
+                            <p class="text-xl font-bold text-gray-800">9 μg/m³</p>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-700">Updated</p>
+                            <p class="text-sm text-gray-500">April 27, 2:45 PM</p>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-brain text-blue-600"></i>
+                            <span class="text-sm text-blue-800">AI prediction of smog and industrial impact</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid-4 mb-6">
+                    <div class="metric-card">
+                        <div class="metric-value text-red-600">3</div>
+                        <div class="text-sm text-gray-500">Critical Areas</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value text-yellow-600">25</div>
+                        <div class="text-sm text-gray-500">Livestock at Risk</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value text-green-600">5</div>
+                        <div class="text-sm text-gray-500">Fields Monitored</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value text-blue-600">89%</div>
+                        <div class="text-sm text-gray-500">AI Accuracy</div>
+                    </div>
+                </div>
+
+                <!-- Feature Grid -->
+                <div class="grid-2 mb-6">
+                    <div class="feature-card" onclick="navigateToScreen('pollution-forecast')">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-cloud text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Pollution Forecast</h3>
+                            <p class="text-sm text-gray-500 mt-1">AI prediction of smog and industrial impact</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="navigateToScreen('crop-impact')">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-seedling text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Crop Impact Detection</h3>
+                            <p class="text-sm text-gray-500 mt-1">Image-based soil or crop health alerts</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="navigateToScreen('pollution-alert')">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">High Pollution Alert</h3>
+                            <p class="text-sm text-gray-500 mt-1">Warn about livestock exposure</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card" onclick="navigateToScreen('alerting-alerts')">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-bell text-orange-600 text-2xl"></i>
+                            </div>
+                            <h3 class="font-semibold text-gray-800">Alerting Alerts</h3>
+                            <p class="text-sm text-gray-500 mt-1">Push notifications for danger</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="status-indicator status-unhealthy"></div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Critical AQI Alert</p>
+                                <p class="text-xs text-gray-500">2 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="status-indicator status-moderate"></div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Crop Damage Detected</p>
+                                <p class="text-xs text-gray-500">4 hours ago</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="status-indicator status-good"></div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">System Update Complete</p>
+                                <p class="text-xs text-gray-500">6 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Pollution Forecast -->
+        <div id="pollution-forecast" class="screen">
+            <div class="header">
+                <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800">Pollution Forecast</h1>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="p-6">
+                <!-- Forecast Map -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Regional Pollution Map</h3>
+                    <div class="forecast-map">
+                        <div class="wind-indicator" style="top: 20%; left: 30%;">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="wind-indicator" style="top: 60%; left: 60%;">
+                            <i class="fas fa-arrow-up-right"></i>
+                        </div>
+                        <div class="wind-indicator" style="top: 80%; left: 20%;">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="absolute bottom-4 left-4 bg-black bg-opacity-50 rounded-lg p-3 text-white">
+                            <div class="text-sm">
+                                <i class="fas fa-wind mr-2"></i>Wind Speed: 12 km/h
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hourly Forecast Chart -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">24-Hour Forecast</h3>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Weekly Outlook -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Weekly Outlook</h3>
+                    <div class="grid-4">
+                        <div class="text-center">
+                            <div class="text-sm text-gray-500 mb-2">Mon</div>
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-exclamation-triangle text-red-600"></i>
+                            </div>
+                            <div class="text-xs text-gray-600">Unhealthy</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-gray-500 mb-2">Tue</div>
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-exclamation-circle text-yellow-600"></i>
+                            </div>
+                            <div class="text-xs text-gray-600">Moderate</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-gray-500 mb-2">Wed</div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-check-circle text-green-600"></i>
+                            </div>
+                            <div class="text-xs text-gray-600">Good</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-gray-500 mb-2">Thu</div>
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-check-circle text-green-600"></i>
+                            </div>
+                            <div class="text-xs text-gray-600">Good</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">AI Insights</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-brain text-blue-600 text-xl mt-1"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">High industrial activity detected</p>
+                                <p class="text-sm text-gray-500">Northeast region showing elevated emissions</p>
+                                <div class="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded mt-1 inline-block">
+                                    Confidence: 89%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-wind text-green-600 text-xl mt-1"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Wind patterns favorable</p>
+                                <p class="text-sm text-gray-500">Pollution levels expected to decrease by evening</p>
+                                <div class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded mt-1 inline-block">
+                                    Reduction: 40-50%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-exclamation-triangle text-orange-600 text-xl mt-1"></i>
+                            <div>
+                                <p class="font-medium text-gray-800">Outdoor activity warning</p>
+                                <p class="text-sm text-gray-500">Avoid outdoor activities between 12 PM - 4 PM</p>
+                                <div class="bg-orange-50 text-orange-700 text-xs px-2 py-1 rounded mt-1 inline-block">
+                                    Health Advisory
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Crop Impact Detection -->
+        <div id="crop-impact" class="screen">
+            <div class="header">
+                <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800">Crop Impact Detection</h1>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="p-6">
+                <!-- Current Detection -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Current Analysis</h3>
+                    <div class="crop-detection mb-4">
+                        <div class="damage-overlay">
+                            <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+                            <p class="font-semibold">Crop damage detected</p>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-orange-600">35%</div>
+                            <div class="text-sm text-gray-500">Damage Level</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-gray-800">2.3ha</div>
+                            <div class="text-sm text-gray-500">Affected Area</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Metrics -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Health Metrics</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Leaf Vitality</span>
+                                <span class="text-sm font-semibold text-red-600">62%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-red-500" style="width: 62%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Soil Moisture</span>
+                                <span class="text-sm font-semibold text-yellow-600">78%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-yellow-500" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Growth Rate</span>
+                                <span class="text-sm font-semibold text-green-600">85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-green-500" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Damage Assessment Chart -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Damage Assessment</h3>
+                    <div class="chart-container">
+                        <canvas id="damageChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- AI Recommendations -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">AI Recommendations</h3>
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-droplet text-blue-600"></i>
+                                <span class="font-medium text-blue-800">Increase irrigation frequency</span>
+                            </div>
+                            <p class="text-sm text-blue-700">Detected moisture stress in affected areas</p>
+                        </div>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-spray-can text-green-600"></i>
+                                <span class="font-medium text-green-800">Apply organic treatment</span>
+                            </div>
+                            <p class="text-sm text-green-700">Preventive measure against further damage</p>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-shield-alt text-purple-600"></i>
+                                <span class="font-medium text-purple-800">Install air purification barriers</span>
+                            </div>
+                            <p class="text-sm text-purple-700">Reduce pollution exposure by 40-60%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Upload New Analysis</h3>
+                    <div class="upload-zone" onclick="uploadImage()">
+                        <i class="fas fa-camera text-gray-400 text-4xl mb-3"></i>
+                        <p class="text-gray-600 mb-2">Take or upload crop image</p>
+                        <p class="text-sm text-gray-500">AI will analyze in real-time</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: High Pollution Alert -->
+        <div id="pollution-alert" class="screen">
+            <div class="header">
+                <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800">High Pollution Alert</h1>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="p-6">
+                <!-- Critical Alert -->
+                <div class="feature-card border-l-4 border-red-500 bg-red-50 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+                        <div>
+                            <h3 class="font-bold text-red-700 text-lg">CRITICAL ALERT</h3>
+                            <p class="text-red-600">Immediate action required</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="alert-badge text-lg">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            AQI: 182 - Hazardous for livestock
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Livestock Status -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Livestock Exposure</h3>
+                    <div class="livestock-alert mb-4">
+                        <div class="text-center text-white">
+                            <i class="fas fa-cow text-6xl mb-3"></i>
+                            <p class="text-xl font-bold">Livestock exposure detected</p>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-red-600">25</div>
+                            <div class="text-sm text-gray-500">Cattle at Risk</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-red-600">3h 15m</div>
+                            <div class="text-sm text-gray-500">Exposure Duration</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exposure Level Chart -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Exposure Levels</h3>
+                    <div class="chart-container">
+                        <canvas id="exposureChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Immediate Actions -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Immediate Actions Required</h3>
+                    <div class="space-y-3">
+                        <button class="emergency-button" onclick="takeAction('shelter')">
+                            <i class="fas fa-home mr-2"></i>
+                            Move livestock to shelter
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('water')">
+                            <i class="fas fa-tint mr-2"></i>
+                            Provide fresh water
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('vet')">
+                            <i class="fas fa-stethoscope mr-2"></i>
+                            Contact veterinarian
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('monitor')">
+                            <i class="fas fa-eye mr-2"></i>
+                            Monitor vital signs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Emergency Contacts -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Emergency Contacts</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone text-green-600"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Emergency Vet</p>
+                                    <p class="text-sm text-gray-500">24/7 livestock care</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-success">Call Now</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone text-blue-600"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Animal Control</p>
+                                    <p class="text-sm text-gray-500">Local authorities</p>
+                                </div>
+                            </div>
+                            <button class="btn">Call Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div
