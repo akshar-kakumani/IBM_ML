@@ -735,7 +735,198 @@
                     </div>
                 </div>
 
-                <!-- Screen 5: Alerting Alerts -->
+                <!-- Health Metrics -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Health Metrics</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Leaf Vitality</span>
+                                <span class="text-sm font-semibold text-red-600">62%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-red-500" style="width: 62%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Soil Moisture</span>
+                                <span class="text-sm font-semibold text-yellow-600">78%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-yellow-500" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm text-gray-600">Growth Rate</span>
+                                <span class="text-sm font-semibold text-green-600">85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill bg-green-500" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Damage Assessment Chart -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Damage Assessment</h3>
+                    <div class="chart-container">
+                        <canvas id="damageChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- AI Recommendations -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">AI Recommendations</h3>
+                    <div class="space-y-3">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-droplet text-blue-600"></i>
+                                <span class="font-medium text-blue-800">Increase irrigation frequency</span>
+                            </div>
+                            <p class="text-sm text-blue-700">Detected moisture stress in affected areas</p>
+                        </div>
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-spray-can text-green-600"></i>
+                                <span class="font-medium text-green-800">Apply organic treatment</span>
+                            </div>
+                            <p class="text-sm text-green-700">Preventive measure against further damage</p>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-shield-alt text-purple-600"></i>
+                                <span class="font-medium text-purple-800">Install air purification barriers</span>
+                            </div>
+                            <p class="text-sm text-purple-700">Reduce pollution exposure by 40-60%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Upload New Analysis</h3>
+                    <div class="upload-zone" onclick="uploadImage()">
+                        <i class="fas fa-camera text-gray-400 text-4xl mb-3"></i>
+                        <p class="text-gray-600 mb-2">Take or upload crop image</p>
+                        <p class="text-sm text-gray-500">AI will analyze in real-time</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: High Pollution Alert -->
+        <div id="pollution-alert" class="screen">
+            <div class="header">
+                <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                    <i class="fas fa-arrow-left text-gray-600"></i>
+                </button>
+                <h1 class="text-xl font-bold text-gray-800">High Pollution Alert</h1>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="p-6">
+                <!-- Critical Alert -->
+                <div class="feature-card border-l-4 border-red-500 bg-red-50 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+                        <div>
+                            <h3 class="font-bold text-red-700 text-lg">CRITICAL ALERT</h3>
+                            <p class="text-red-600">Immediate action required</p>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="alert-badge text-lg">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            AQI: 182 - Hazardous for livestock
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Livestock Status -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Livestock Exposure</h3>
+                    <div class="livestock-alert mb-4">
+                        <div class="text-center text-white">
+                            <i class="fas fa-cow text-6xl mb-3"></i>
+                            <p class="text-xl font-bold">Livestock exposure detected</p>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-red-600">25</div>
+                            <div class="text-sm text-gray-500">Cattle at Risk</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-red-600">3h 15m</div>
+                            <div class="text-sm text-gray-500">Exposure Duration</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exposure Level Chart -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Exposure Levels</h3>
+                    <div class="chart-container">
+                        <canvas id="exposureChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Immediate Actions -->
+                <div class="feature-card mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Immediate Actions Required</h3>
+                    <div class="space-y-3">
+                        <button class="emergency-button" onclick="takeAction('shelter')">
+                            <i class="fas fa-home mr-2"></i>
+                            Move livestock to shelter
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('water')">
+                            <i class="fas fa-tint mr-2"></i>
+                            Provide fresh water
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('vet')">
+                            <i class="fas fa-stethoscope mr-2"></i>
+                            Contact veterinarian
+                        </button>
+                        <button class="emergency-button" onclick="takeAction('monitor')">
+                            <i class="fas fa-eye mr-2"></i>
+                            Monitor vital signs
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Emergency Contacts -->
+                <div class="feature-card">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Emergency Contacts</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone text-green-600"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Emergency Vet</p>
+                                    <p class="text-sm text-gray-500">24/7 livestock care</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-success">Call Now</button>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-phone text-blue-600"></i>
+                                <div>
+                                    <p class="font-medium text-gray-800">Animal Control</p>
+                                    <p class="text-sm text-gray-500">Local authorities</p>
+                                </div>
+                            </div>
+                            <button class="btn">Call Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Alerting Alerts -->
         <div id="alerting-alerts" class="screen">
             <div class="header">
                 <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
@@ -1654,7 +1845,7 @@
         }
 
         function takeAction(action) {
-            alert(Taking action: ${action});
+            alert(`Taking action: ${action}`);
         }
 
         function submitReport() {
@@ -1703,193 +1894,5 @@
             });
         });
     </script>
-                <!-- Health Metrics -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Health Metrics</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-600">Leaf Vitality</span>
-                                <span class="text-sm font-semibold text-red-600">62%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill bg-red-500" style="width: 62%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-600">Soil Moisture</span>
-                                <span class="text-sm font-semibold text-yellow-600">78%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill bg-yellow-500" style="width: 78%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-600">Growth Rate</span>
-                                <span class="text-sm font-semibold text-green-600">85%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill bg-green-500" style="width: 85%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Damage Assessment Chart -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Damage Assessment</h3>
-                    <div class="chart-container">
-                        <canvas id="damageChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- AI Recommendations -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">AI Recommendations</h3>
-                    <div class="space-y-3">
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                            <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-droplet text-blue-600"></i>
-                                <span class="font-medium text-blue-800">Increase irrigation frequency</span>
-                            </div>
-                            <p class="text-sm text-blue-700">Detected moisture stress in affected areas</p>
-                        </div>
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                            <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-spray-can text-green-600"></i>
-                                <span class="font-medium text-green-800">Apply organic treatment</span>
-                            </div>
-                            <p class="text-sm text-green-700">Preventive measure against further damage</p>
-                        </div>
-                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                            <div class="flex items-center gap-2 mb-2">
-                                <i class="fas fa-shield-alt text-purple-600"></i>
-                                <span class="font-medium text-purple-800">Install air purification barriers</span>
-                            </div>
-                            <p class="text-sm text-purple-700">Reduce pollution exposure by 40-60%</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Upload Section -->
-                <div class="feature-card">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Upload New Analysis</h3>
-                    <div class="upload-zone" onclick="uploadImage()">
-                        <i class="fas fa-camera text-gray-400 text-4xl mb-3"></i>
-                        <p class="text-gray-600 mb-2">Take or upload crop image</p>
-                        <p class="text-sm text-gray-500">AI will analyze in real-time</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Screen 4: High Pollution Alert -->
-        <div id="pollution-alert" class="screen">
-            <div class="header">
-                <button onclick="navigateToScreen('dashboard')" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200">
-                    <i class="fas fa-arrow-left text-gray-600"></i>
-                </button>
-                <h1 class="text-xl font-bold text-gray-800">High Pollution Alert</h1>
-                <div class="w-10"></div>
-            </div>
-
-            <div class="p-6">
-                <!-- Critical Alert -->
-                <div class="feature-card border-l-4 border-red-500 bg-red-50 mb-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
-                        <div>
-                            <h3 class="font-bold text-red-700 text-lg">CRITICAL ALERT</h3>
-                            <p class="text-red-600">Immediate action required</p>
-                        </div>
-                    </div>
-                    <div class="text-center">
-                        <div class="alert-badge text-lg">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            AQI: 182 - Hazardous for livestock
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Livestock Status -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Livestock Exposure</h3>
-                    <div class="livestock-alert mb-4">
-                        <div class="text-center text-white">
-                            <i class="fas fa-cow text-6xl mb-3"></i>
-                            <p class="text-xl font-bold">Livestock exposure detected</p>
-                        </div>
-                    </div>
-                    <div class="grid-2">
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-red-600">25</div>
-                            <div class="text-sm text-gray-500">Cattle at Risk</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-2xl font-bold text-red-600">3h 15m</div>
-                            <div class="text-sm text-gray-500">Exposure Duration</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Exposure Level Chart -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Exposure Levels</h3>
-                    <div class="chart-container">
-                        <canvas id="exposureChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Immediate Actions -->
-                <div class="feature-card mb-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Immediate Actions Required</h3>
-                    <div class="space-y-3">
-                        <button class="emergency-button" onclick="takeAction('shelter')">
-                            <i class="fas fa-home mr-2"></i>
-                            Move livestock to shelter
-                        </button>
-                        <button class="emergency-button" onclick="takeAction('water')">
-                            <i class="fas fa-tint mr-2"></i>
-                            Provide fresh water
-                        </button>
-                        <button class="emergency-button" onclick="takeAction('vet')">
-                            <i class="fas fa-stethoscope mr-2"></i>
-                            Contact veterinarian
-                        </button>
-                        <button class="emergency-button" onclick="takeAction('monitor')">
-                            <i class="fas fa-eye mr-2"></i>
-                            Monitor vital signs
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Emergency Contacts -->
-                <div class="feature-card">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Emergency Contacts</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-phone text-green-600"></i>
-                                <div>
-                                    <p class="font-medium text-gray-800">Emergency Vet</p>
-                                    <p class="text-sm text-gray-500">24/7 livestock care</p>
-                                </div>
-                            </div>
-                            <button class="btn btn-success">Call Now</button>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <i class="fas fa-phone text-blue-600"></i>
-                                <div>
-                                    <p class="font-medium text-gray-800">Animal Control</p>
-                                    <p class="text-sm text-gray-500">Local authorities</p>
-                                </div>
-                            </div>
-                            <button class="btn">Call Now</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div
+</body>
+</html>
